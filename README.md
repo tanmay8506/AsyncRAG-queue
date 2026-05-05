@@ -1,5 +1,5 @@
-AsyncRAG-Queue: Distributed Document Ingestion & Retrieval
-AsyncRAG-Queue is a production-ready RAG (Retrieval-Augmented Generation) pipeline designed to handle document processing asynchronously. Instead of making users wait for high-latency embedding tasks, the system uses a Redis-backed job queue to manage document ingestion in the background.
+AsyncRAG-Stream: Distributed Document Ingestion & Retrieval
+AsyncRAG-Stream is a production-ready RAG (Retrieval-Augmented Generation) pipeline designed to handle document processing asynchronously. Instead of making users wait for high-latency embedding tasks, the system uses a Redis-backed job queue to manage document ingestion in the background.
 
 🏗 System Architecture
 The project implements a Producer-Consumer pattern:
