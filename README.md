@@ -1,43 +1,45 @@
-AsyncRAG-Stream: Distributed Document Ingestion & Retrieval
-AsyncRAG-Stream is a production-ready RAG (Retrieval-Augmented Generation) pipeline designed to handle document processing asynchronously. Instead of making users wait for high-latency embedding tasks, the system uses a Redis-backed job queue to manage document ingestion in the background.
+Here is the refined, high-impact README for AsyncRAG-queue. This version is written to catch the eye of a technical recruiter, focusing on the architectural decisions that make this a "system" rather than just a "script."
+
+AsyncRAG-queue: Distributed Asynchronous RAG Pipeline
+AsyncRAG-queue is a scalable Retrieval-Augmented Generation (RAG) system designed to solve the latency issues associated with document ingestion. By decoupling the file upload process from the embedding generation using a Redis-backed Producer-Consumer architecture, the system ensures a non-blocking user experience even when processing large-scale datasets.
 
 🏗 System Architecture
-The project implements a Producer-Consumer pattern:
+Unlike standard RAG implementations that process documents "in-request," AsyncRAG-queue utilizes a distributed approach:
 
-The Producer (API): A Flask server that handles file uploads and user queries. When a file is uploaded, it pushes a job metadata to Redis.
+API Layer (The Producer): A Flask-based REST API that receives document uploads and pushes ingestion metadata to a Redis queue.
 
-The Broker (Redis): Acts as the orchestration layer, holding jobs in a queue until a worker is free.
+Message Broker (Redis): Orchestrates the job flow, ensuring tasks are persisted and distributed efficiently.
 
-The Consumer (Worker): A background script that watches the Redis queue, loads files (PDF/TXT), chunks them, generates embeddings, and updates the ChromaDB vector store.
+Background Worker (The Consumer): A dedicated process that monitors the queue, performs heavy-duty PDF/Text parsing, generates embeddings via HuggingFace, and indexes them into ChromaDB.
 
-The LLM (Groq): Provides high-speed inference using Llama 3.3-70B for final answer generation based on retrieved context.
+Inference Engine (Groq): Powered by Llama-3.3-70B, the system performs semantic retrieval from the vector store to generate context-aware, grounded responses.
 
-🚀 Key Features
-Asynchronous Ingestion: Upload large PDFs without blocking the API or timing out.
+🚀 Key Engineering Features
+Asynchronous Ingestion: Offloads high-latency tasks (chunking/embedding) to background workers, preventing API timeouts.
 
-Persistent Vector Storage: Uses ChromaDB to store and persist embeddings for long-term retrieval.
+Horizontal Scalability: The system is designed to scale; multiple worker instances can be deployed to process the Redis queue in parallel.
 
-Blocking-Pop Logic: Efficient worker resource management—workers sleep until a job is pushed to the queue.
+Persistent Vector Store: Uses ChromaDB for long-term storage of document embeddings, allowing for lightning-fast similarity searches.
 
-Flexible Loaders: Supports both .pdf and .txt formats with intelligent recursive character splitting.
+Self-Sleeping Workers: Implements blpop (Blocking Pop) logic, ensuring workers consume zero CPU cycles while waiting for new jobs.
 
-Contextual Accuracy: Strict prompting ensures the LLM only answers based on the provided document context.
+Recursive Character Splitting: Optimizes context retrieval by maintaining semantic coherence across document chunks.
 
 🛠 Tech Stack
-Orchestration: Redis
+Backend: Flask (Python)
 
-Backend: Flask
+Task Queue: Redis
 
-Vector DB: ChromaDB
+Vector Database: ChromaDB
 
 Embeddings: HuggingFace (all-MiniLM-L6-v2)
 
-LLM: Llama-3.3-70B (via Groq)
+LLM Engine: Groq (Llama-3.3-70B-Versatile)
 
-RAG Framework: LangChain
+Framework: LangChain
 
 🔧 Installation & Setup
-Install & Start Redis:
+Start the Redis Server:
 
 Bash
 # Ensure Redis is running on localhost:6379
@@ -45,23 +47,30 @@ redis-server
 Clone & Install Dependencies:
 
 Bash
-git clone https://github.com/tanmay8506/AsyncRAG-Stream.git
-cd AsyncRAG-Stream
+git clone https://github.com/tanmay8506/AsyncRAG-queue.git
+cd AsyncRAG-queue
 pip install flask redis groq langchain-huggingface langchain-community chromadb pypdf python-dotenv
-Run the System (Two Terminals Required):
+Configure Environment:
+Create a .env file:
 
-Terminal 1 (The Worker): python worker.py
+Code snippet
+GROQ_API_KEY=your_api_key_here
+Launch the Pipeline:
 
-Terminal 2 (The API): python main.py
+Start the Worker: python worker.py
 
-🎮 API Usage
-1. Upload a Document
-POST /upload with a file attached. This triggers the background worker.
+Start the API: python server.py
 
-2. Ask a Question
+🎮 Usage
+Document Ingestion
+POST /upload
+
+Upload a .pdf or .txt file. The server will immediately return a 200 OK with a "queued" status while the worker processes the file in the background.
+
+Semantic Query
 POST /ask
 
 JSON
 {
-  "question": "What is RAG?"
+  "question": "Explain the relationship between LLMs and RAG based on the document."
 }
