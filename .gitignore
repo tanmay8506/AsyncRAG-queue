@@ -1,0 +1,33 @@
+# API keys & secrets
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Vector databases (can be large)
+chroma_db/
+
+# Temp folders
+temp/
+
+# Virtual environments (if you ever use one)
+venv/
+.venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Large model cache (huggingface downloads)
+.cache/
+
+# Logs
+*.log

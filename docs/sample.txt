@@ -1,0 +1,10 @@
+Artificial Intelligence (AI) is the simulation of human intelligence in machines.
+Machine Learning is a subset of AI where systems learn from data.
+Deep Learning uses neural networks with many layers to learn complex patterns.
+Large Language Models (LLMs) are trained on massive text datasets and can generate human-like text.
+RAG stands for Retrieval Augmented Generation. It combines a retrieval system with a language model.
+In RAG, documents are first converted into vector embeddings and stored in a vector database.
+When a user asks a question, the most similar document chunks are retrieved and passed to the LLM.
+This allows the LLM to answer questions based on your own custom documents.
+ChromaDB is a popular open-source vector database used for storing embeddings.
+Sentence Transformers are models that convert text into dense vector representations.
