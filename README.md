@@ -1,5 +1,3 @@
-Here is the refined, high-impact README for AsyncRAG-queue. This version is written to catch the eye of a technical recruiter, focusing on the architectural decisions that make this a "system" rather than just a "script."
-
 AsyncRAG-queue: Distributed Asynchronous RAG Pipeline
 AsyncRAG-queue is a scalable Retrieval-Augmented Generation (RAG) system designed to solve the latency issues associated with document ingestion. By decoupling the file upload process from the embedding generation using a Redis-backed Producer-Consumer architecture, the system ensures a non-blocking user experience even when processing large-scale datasets.
 
